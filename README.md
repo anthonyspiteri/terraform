@@ -1,2 +1,2 @@
 # terraform
-Just a place to place my Terraform hacks
+Just a place to put my Terraform hacks
