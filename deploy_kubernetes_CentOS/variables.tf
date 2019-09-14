@@ -86,6 +86,10 @@ variable "vsphere_time_zone" {
   default     = "UTC"
 }
 
+variable "vsphere_vm_password" {
+  description ="Root password for the CentOS Teamplte"
+}
+
 variable "vsphere_vm_name_k8n1" {
   description = "K8 Node 1 VM Name"
 }

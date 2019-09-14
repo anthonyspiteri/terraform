@@ -17,10 +17,12 @@ vsphere_datastore = "vsanDatastore"
 vsphere_port_group = "TPM03-730"
 vsphere_ipv4_address = "10.0.30.191"
 vsphere_ipv4_netmask = "24"
+vsphere_k8pod_network = "10.0.30.0/24"
 vsphere_ipv4_gateway = "10.0.30.1"
 vsphere_dns_servers = "10.0.0.2"
 vsphere_domain = "aperaturelabs.biz"
 vsphere_time_zone = "UTC"
+vsphere_vm_password ="Veeam1!"
 
 # K8 NODES 
 vsphere_vm_name_k8n1 = "TPM03-K8-NODE1"

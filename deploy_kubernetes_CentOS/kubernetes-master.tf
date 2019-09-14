@@ -60,7 +60,7 @@ provisioner "file" {
         connection {
             type     = "ssh"
             user     = "root"
-            password = "Veeam1!"
+            password = "${var.vsphere_vm_password}"
         }
     }
 
@@ -72,7 +72,7 @@ provisioner "file" {
         connection {
             type     = "ssh"
             user     = "root"
-            password = "Veeam1!"
+            password = "${var.vsphere_vm_password}"
         }
     }
 }
