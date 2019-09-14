@@ -4,8 +4,7 @@
 Automated deployment of Kubernetes consisting of a Master and three Node Servers on CentOS based Virtual Machines
 
 ## Requirements
- - CentOS Template prepared and ready for deplaoyment - see example configuration here
- - 
+ - CentOS Template prepared and ready for deployment form vCenter - see example configuration http://everything-virtual.com/2016/05/06/creating-a-centos-7-2-vmware-gold-template/
 
 ## Configuration
 All variables are configured in the terraform.tfvars file and passed through to the TF configuration files. No other edits need to be made to the TF files. 
