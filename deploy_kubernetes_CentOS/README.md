@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Deploy Kubernetes Cluster with Terraform on vSphere 
 
 ## Description
