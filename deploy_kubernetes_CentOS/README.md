@@ -1,4 +1,3 @@
-
 # Deploy Kubernetes Cluster with Terraform on vSphere 
 
 ## Description
@@ -72,3 +71,10 @@ All variables are configured in the terraform.tfvars file and passed through to 
     vsphere_vm_name_k8n1 = "TPM03-K8-NODE-T"
     vsphere_ipv4_address_k8n1_network = "10.0.30."
     vsphere_ipv4_address_k8n1_host ="197"
+
+## To Do
+
+ - [ ] Update Outputs to reflect Node IPs
+ - [ ] Automate kubeadm join commands
+ - [ ] Remove Node from Cluster automatically
+ - [ ] Install Kubernetes Dashboard
