@@ -68,6 +68,11 @@ variable "vsphere_ipv4_netmask" {
   default     = "24"
 }
 
+variable "vsphere_k8pod_network" {
+  description = "POD Network and Subnet Mask for K8 Configruation Script"
+  
+}
+
 variable "vsphere_ipv4_gateway" {
   description = "What is the IPv4 gateway of the VM"
 }
@@ -90,26 +95,17 @@ variable "vsphere_vm_password" {
   description ="Root password for the CentOS Teamplte"
 }
 
+variable "vsphere_k8_nodes" {
+  description = "Number of K8 Nodes"
+}
+
 variable "vsphere_vm_name_k8n1" {
-  description = "K8 Node 1 VM Name"
+  description = "K8 Node VM Name"
 }
-
-variable "vsphere_vm_name_k8n2" {
-  description = "K8 Node 2 VM Name"
-}
-
-variable "vsphere_vm_name_k8n3" {
-  description = "K8 Node 3 VM Name"
-}
-
-variable "vsphere_ipv4_address_k8n1" {
+variable "vsphere_ipv4_address_k8n1_network" {
   description = "K8 Node 1 IP"
 }
 
-variable "vsphere_ipv4_address_k8n2" {
-  description = "K8 Node 2 IP"
-}
-
-variable "vsphere_ipv4_address_k8n3" {
-  description = "K8 Node 3 IP"
+variable "vsphere_ipv4_address_k8n1_host" {
+  description = "K8 Node 1 IP"
 }

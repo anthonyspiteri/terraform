@@ -53,9 +53,10 @@ resource "vsphere_virtual_machine" "TPM03-K8-MASTER" {
     }
   }
 
-provisioner "file" {
-        source      = "configure.sh"
-        destination = "/tmp/configure.sh"
+    # Configure Kubernetes #
+    provisioner "file" {
+        source      = "configure_phase1.sh"
+        destination = "/tmp/configure_phase1.sh"
 
         connection {
             type     = "ssh"
@@ -66,9 +67,60 @@ provisioner "file" {
 
     provisioner "remote-exec" {
         inline = [
-            "chmod +x /tmp/configure.sh",
-            "/tmp/configure.sh",
+            "chmod +x /tmp/configure_phase1.sh",
+            "/tmp/configure_phase1.sh",
         ]
+        connection {
+            type     = "ssh"
+            user     = "root"
+            password = "${var.vsphere_vm_password}"
+        }
+    }
+
+    provisioner "remote-exec" {
+        inline = [
+            "kubeadm init --pod-network-cidr=${var.vsphere_k8pod_network}"
+        ]
+      
+        connection {
+            type     = "ssh"
+            user     = "root"
+            password = "${var.vsphere_vm_password}"
+        }
+    }
+
+    provisioner "file" {
+        source      = "configure_phase2.sh"
+        destination = "/tmp/configure_phase2.sh"
+
+        connection {
+            type     = "ssh"
+            user     = "root"
+            password = "${var.vsphere_vm_password}"
+        }
+    }
+
+    provisioner "remote-exec" {
+        inline = [
+            "chmod +x /tmp/configure_phase2.sh",
+            "/tmp/configure_phase2.sh",
+        ]
+        connection {
+            type     = "ssh"
+            user     = "root"
+            password = "${var.vsphere_vm_password}"
+        }
+    }
+    provisioner "remote-exec" {
+        inline = [
+            "cat << EOF > /etc/hosts",
+            "${var.vsphere_ipv4_address} ${var.vsphere_vm_name}",
+            "${var.vsphere_ipv4_address_k8n1_network}${"${var.vsphere_ipv4_address_k8n1_host}" + 0} ${var.vsphere_vm_name_k8n1}${count.index + 1}",
+            "${var.vsphere_ipv4_address_k8n1_network}${"${var.vsphere_ipv4_address_k8n1_host}" + 1} ${var.vsphere_vm_name_k8n1}${count.index + 2}",
+            "${var.vsphere_ipv4_address_k8n1_network}${"${var.vsphere_ipv4_address_k8n1_host}" + 2} ${var.vsphere_vm_name_k8n1}${count.index + 3}",
+            "EOF"
+        ]
+      
         connection {
             type     = "ssh"
             user     = "root"

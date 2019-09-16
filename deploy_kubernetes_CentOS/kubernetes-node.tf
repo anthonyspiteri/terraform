@@ -3,9 +3,14 @@
 #===============================================================================
 
 # Create a vSphere VM in the folder #
-resource "vsphere_virtual_machine" "TPM03-K8-NODE3" {
+resource "vsphere_virtual_machine" "TPM03-K8-NODE" {
+
+  # Node Count #
+
+  count = "${var.vsphere_k8_nodes}"
+
   # VM placement #
-  name             = "${var.vsphere_vm_name_k8n3}"
+  name             = "${var.vsphere_vm_name_k8n1}${count.index + 1}"
   resource_pool_id = "${data.vsphere_resource_pool.resource_pool.id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
   folder           = "${var.vsphere_vm_folder}"
@@ -39,13 +44,13 @@ resource "vsphere_virtual_machine" "TPM03-K8-NODE3" {
 
     customize {
       linux_options {
-        host_name = "${var.vsphere_vm_name_k8n3}"
+        host_name = "${var.vsphere_vm_name_k8n1}${count.index + 1}"
         domain    = "${var.vsphere_domain}"
         #time_zone = "${var.vsphere_time_zone}"
       }
 
       network_interface {
-        ipv4_address = "${var.vsphere_ipv4_address_k8n3}"
+        ipv4_address = "${var.vsphere_ipv4_address_k8n1_network}${"${var.vsphere_ipv4_address_k8n1_host}" + count.index}"
         ipv4_netmask = "${var.vsphere_ipv4_netmask}"
       }
 
@@ -77,5 +82,20 @@ provisioner "file" {
             password = "${var.vsphere_vm_password}"
         }
     }
-
+        provisioner "remote-exec" {
+        inline = [
+            "cat << EOF > /etc/hosts",
+            "${var.vsphere_ipv4_address} ${var.vsphere_vm_name}",
+            "${var.vsphere_ipv4_address_k8n1_network}${"${var.vsphere_ipv4_address_k8n1_host}" + 0} ${var.vsphere_vm_name_k8n1}${count.index + 1}",
+            "${var.vsphere_ipv4_address_k8n1_network}${"${var.vsphere_ipv4_address_k8n1_host}" + 1} ${var.vsphere_vm_name_k8n1}${count.index + 2}",
+            "${var.vsphere_ipv4_address_k8n1_network}${"${var.vsphere_ipv4_address_k8n1_host}" + 2} ${var.vsphere_vm_name_k8n1}${count.index + 3}",
+            "EOF"
+        ]
+      
+        connection {
+            type     = "ssh"
+            user     = "root"
+            password = "${var.vsphere_vm_password}"
+        }
+    }
 }

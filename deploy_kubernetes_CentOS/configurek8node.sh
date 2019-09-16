@@ -11,13 +11,6 @@ sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
 sudo sysctl net.bridge.bridge-nf-call-iptables=1
 
-cat << EOF > /etc/hosts
-10.0.30.191 TPM03-K8-MASTER1
-10.0.30.192 TPM03-K8-NODE1
-10.0.30.193 TPM03-K8-NODE2
-10.0.30.194 TPM03-K8-NODE3
-EOF
-
 cat << EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
