@@ -34,36 +34,38 @@ The Terraform templates included in this repository requires Terraform to be ava
 ## Configuration
 All variables are configured in the terraform.tfvars file and passed through to the TF configuration files.
 
-- vCenter Details
 
-vsphere_vcenter = ""
-vsphere_user = ""
-vsphere_password = ""
+### vCenter connection
 
-- VM Specifications
+vsphere_vcenter = "vc03.aperaturelabs.biz"
+vsphere_user = "administrator@vsphere.local"
+vsphere_password = "PASSWORD"
+vsphere_unverified_ssl = "true"
 
-vsphere_datacenter = ""
-vsphere_vm_folder = ""
-vsphere_vm_name = "" <This will be your master>
-vsphere_vm_resource_pool =""
-vsphere_vm_template = "
-vsphere_cluster = ""
-vsphere_vcpu_number = "2" <Reccomended>
-vsphere_memory_size = "8192" <Reccomended>
-vsphere_datastore = ""
-vsphere_port_group = "T
-vsphere_ipv4_address = ""
-vsphere_ipv4_netmask = ""
-vsphere_ipv4_gateway = ""
-vsphere_dns_servers = ""
-vsphere_domain = ""
-vsphere_time_zone = ""
+### VM specifications
 
- - Kubernetes Node Details
+vsphere_datacenter = "VC03"
+vsphere_vm_folder = "TPM03-AS"
+vsphere_vm_name = "TPM03-K8-MASTER-T"
+vsphere_vm_resource_pool ="TPM03-AS"
+vsphere_vm_template = "TPM03-AS/TPM03-CENTOS7-TEMPLATE"
+vsphere_cluster = "MEGA-03"
+vsphere_vcpu_number = "2"
+vsphere_memory_size = "8192"
+vsphere_datastore = "vsanDatastore"
+vsphere_port_group = "TPM03-730"
+vsphere_ipv4_address = "10.0.30.196"
+vsphere_ipv4_netmask = "24"
+vsphere_k8pod_network = "10.0.30.0/24"
+vsphere_ipv4_gateway = "10.0.30.1"
+vsphere_dns_servers = "10.0.0.2"
+vsphere_domain = "aperaturelabs.biz"
+vsphere_time_zone = "UTC"
+vsphere_vm_password ="Veeam1!"
 
-vsphere_vm_name_k8n1 = ""
-vsphere_vm_name_k8n2 = ""
-vsphere_vm_name_k8n3 = ""
-vsphere_ipv4_address_k8n1 = ""
-vsphere_ipv4_address_k8n2 = ""
-vsphere_ipv4_address_k8n3 = ""
+### K8 NODES
+
+vsphere_k8_nodes = "1"
+vsphere_vm_name_k8n1 = "TPM03-K8-NODE-T"
+vsphere_ipv4_address_k8n1_network = "10.0.30."
+vsphere_ipv4_address_k8n1_host ="197"
