@@ -47,6 +47,8 @@ All variables are configured in the terraform.tfvars file and passed through to 
 
 ### VM specifications
 
+The following variables can be adjusted dependant on installation vSphere platform. The one var to look out for is the K8 Pod Network, which is used during the setup of Kubernetes.
+
     vsphere_datacenter = "VC03"
     vsphere_vm_folder = "TPM03-AS"
     vsphere_vm_name = "TPM03-K8-MASTER-T"
