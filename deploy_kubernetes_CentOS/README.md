@@ -68,6 +68,8 @@ All variables are configured in the terraform.tfvars file and passed through to 
 
 ### K8 NODES
 
+The varibales below dictate the number of nodes (if the var is not specified during the apply), the name of the nodes and then the first three octects of the IP Subnet and then the starting host address of nodes. The names and IP addresses of nodes are incremented based on the number of nodes being deployed.
+
     vsphere_k8_nodes = "1"
     vsphere_vm_name_k8n1 = "TPM03-K8-NODE-T"
     vsphere_ipv4_address_k8n1_network = "10.0.30."
