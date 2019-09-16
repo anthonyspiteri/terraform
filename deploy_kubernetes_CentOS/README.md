@@ -8,21 +8,24 @@ Automated deployment of Kubernetes consisting of a Master and configurable Node 
  - CentOS Template prepared and ready for deployment form vCenter - see example configuration http://everything-virtual.com/2016/05/06/creating-a-centos-7-2-vmware-gold-template/
 
 #### Version 2.0
-> Added support for Update 4 PowerShell command to mananage new Cloud Credentials
+> Added ability to deploy Kubernetes Nodes dynamically via terraform apply and also via declared variable
+> Split configuration scripts up to allow use of variables for dynamic deployment leveraging remote-exec for file and inline commands
 
-> Added Scale Out Backup Repository Support with option for Capacity Tier
+## Execution
 
-> Merged BR-Condigure-Veeam code into main PowerShell and config.json (https://github.com/anthonyspiteri/powershell/tree/master/BR-Configure-Veeam)
+Ensure all configuration variables are set as per below.
 
-> Added better logic for processing Backup Repository selection for Default Job Creation
+    ./terraform init
+    ./terraform plan
+ 
+Can be applied with or without number of nodes variable. If not specified will use node count declared in terraform.tfvars otherwise specified count with apply will take precedence.
+ 
+    ./terraform apply
+    ./terraform apply --var 'vsphere_k8_nodes=3' --auto-approve
+    
+After deployment you need to use the kubeadm join command to join the nodes to the cluster. The required command will be outputed via the remote-exec script as shown below
 
-## Getting Started
-
-    EXAMPLE - PS C:\>deploy_veeam_sddc_release.ps1 -Runall
-    EXAMPLE - PS C:\>deploy_veeam_sddc_release.ps1 -Runall -LocalLinuxRepoDeploy
-    EXAMPLE - PS C:\>deploy_veeam_sddc_release.ps1 -RunVBRConfigure -NoLinuxRepo
-    EXAMPLE - PS C:\>deploy_veeam_sddc_release.ps1 -ClearVBRConfig
-    EXAMPLE - PS C:\>deploy_veeam_sddc_release.ps1 -RunVBRConfigure -ConfigureSOBR -NoCapacityTier
+![enter image description here](https://snipboard.io/L9Zqpa.jpg)
 
 The Terraform templates included in this repository requires Terraform to be available locally on the machine running the templates.  Before you begin, please verify that you have the following information:
 
