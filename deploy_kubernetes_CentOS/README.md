@@ -8,6 +8,7 @@ Automated deployment of Kubernetes consisting of a Master and configurable Node 
 
 #### Version 2.0
 > Added ability to deploy Kubernetes Nodes dynamically via terraform apply and also via declared variable
+
 > Split configuration scripts up to allow use of variables for dynamic deployment leveraging remote-exec for file and inline commands
 
 ## Execution
