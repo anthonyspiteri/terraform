@@ -29,9 +29,10 @@ After deployment you need to use the kubeadm join command to join the nodes to t
 
 The Terraform templates included in this repository requires Terraform to be available locally on the machine running the templates.  Before you begin, please verify that you have the following information:
 
-1. Download [Terraform](https://www.terraform.io/downloads.html) (minimum tested version 0.11.8) binary to your workstation.
-2. Gather the VMware credentials required to communicate to vCenter
-3. Update the variable values in the newly created `terraform.tfvars` file.
+1. Download [Terraform](https://releases.hashicorp.com/terraform/0.11.7/) (minimum tested version 0.11.7) binary to your workstation.
+2. Terraform vSphere Provider 1.15 
+3. Gather the VMware credentials required to communicate to vCenter
+4. Update the variable values in the newly created `terraform.tfvars` file.
 
 
 ## Configuration
