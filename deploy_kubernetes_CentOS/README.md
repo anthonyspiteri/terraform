@@ -5,6 +5,13 @@ Automated deployment of Kubernetes consisting of a Master and configurable Node 
 
 ## Requirements
  - CentOS Template prepared and ready for deployment form vCenter - see example configuration http://everything-virtual.com/2016/05/06/creating-a-centos-7-2-vmware-gold-template/
+ 
+The Terraform templates included in this repository requires Terraform to be available locally on the machine running the templates.  Before you begin, please verify that you have the following information:
+
+1. Download [Terraform](https://releases.hashicorp.com/terraform/0.11.7/) (minimum tested version 0.11.7) binary to your workstation.
+2. Terraform vSphere Provider 1.5.0 
+3. Gather the VMware credentials required to communicate to vCenter
+4. Update the variable values in the newly created `terraform.tfvars` file.
 
 #### Version 2.0
 > Added ability to deploy Kubernetes Nodes dynamically via terraform apply and also via declared variable
@@ -26,13 +33,6 @@ Can be applied with or without number of nodes variable. If not specified will u
 After deployment you need to use the kubeadm join command to join the nodes to the cluster. The required command will be outputed via the remote-exec script as shown below
 
 ![enter image description here](https://snipboard.io/L9Zqpa.jpg)
-
-The Terraform templates included in this repository requires Terraform to be available locally on the machine running the templates.  Before you begin, please verify that you have the following information:
-
-1. Download [Terraform](https://releases.hashicorp.com/terraform/0.11.7/) (minimum tested version 0.11.7) binary to your workstation.
-2. Terraform vSphere Provider 1.5.0 
-3. Gather the VMware credentials required to communicate to vCenter
-4. Update the variable values in the newly created `terraform.tfvars` file.
 
 ## Configuration
 All variables are configured in the terraform.tfvars file and passed through to the TF configuration files.
