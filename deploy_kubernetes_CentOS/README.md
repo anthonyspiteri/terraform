@@ -1,14 +1,15 @@
 # Deploy Kubernetes Cluster with Terraform on vSphere 
 
 ## Description
-Automated deployment of Kubernetes consisting of a Master and configurable Node Servers on CentOS based Virtual Machines
+Automated deployment of Kubernetes consisting of a Master and configurable Node Servers on CentOS based Virtual Machines 
+(Related Blog Post - https://anthonyspiteri.net/?p=8928&preview=true)
 
 ## Requirements
  - CentOS Template prepared and ready for deployment form vCenter - see example configuration http://everything-virtual.com/2016/05/06/creating-a-centos-7-2-vmware-gold-template/
  
 The Terraform templates included in this repository requires Terraform to be available locally on the machine running the templates.  Before you begin, please verify that you have the following information:
 
-1. Download [Terraform](https://releases.hashicorp.com/terraform/0.11.7/) (minimum tested version 0.11.7) binary to your workstation.
+1. Download [Terraform](https://releases.hashicorp.com/terraform/0.11.7/) (tested version 0.11.7 - 0.12 will not work) binary to your workstation.
 2. Terraform vSphere Provider 1.5.0 
 3. Gather the VMware credentials required to communicate to vCenter
 4. Update the variable values in the newly created `terraform.tfvars` file.
@@ -32,7 +33,7 @@ Can be applied with or without number of nodes variable. If not specified will u
     ./terraform apply
     ./terraform apply --var 'vsphere_k8_nodes=3' --auto-approve
     
-After deployment you need to use the kubeadm join command to join the nodes to the cluster. The required command will be outputed via the remote-exec script as shown below
+After deployment you need to use the kubeadm join command to join the nodes to the cluster. The required command will be outputed via the remote-exec script as shown below. If you then run the apply without the specified var it will revert to the value in the terraform.tfvars
 
 ![enter image description here](https://snipboard.io/L9Zqpa.jpg)
 
