@@ -79,6 +79,10 @@ The varibales below dictate the number of nodes (if the var is not specified dur
     vsphere_ipv4_address_k8n1_network = "10.0.30."
     vsphere_ipv4_address_k8n1_host ="197"
 
+## Deployment Video
+
+[![asciicast](https://asciinema.org/a/269193.svg)](https://asciinema.org/a/269193)
+
 ## To Do
 
  - [X] Update Outputs to reflect Node IPs
