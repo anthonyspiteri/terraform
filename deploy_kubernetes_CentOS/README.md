@@ -13,10 +13,12 @@ The Terraform templates included in this repository requires Terraform to be ava
 3. Gather the VMware credentials required to communicate to vCenter
 4. Update the variable values in the newly created `terraform.tfvars` file.
 
-#### Version 2.0
+#### Version 2.1
 > Added ability to deploy Kubernetes Nodes dynamically via terraform apply and also via declared variable
 
 > Split configuration scripts up to allow use of variables for dynamic deployment leveraging remote-exec for file and inline commands
+
+> Added Output to display Node IPs
 
 ## Execution
 
@@ -79,7 +81,7 @@ The varibales below dictate the number of nodes (if the var is not specified dur
 
 ## To Do
 
- - [ ] Update Outputs to reflect Node IPs
+ - [X] Update Outputs to reflect Node IPs
  - [ ] Automate kubeadm join commands
  - [ ] Remove Node from Cluster automatically
  - [ ] Install Kubernetes Dashboard
