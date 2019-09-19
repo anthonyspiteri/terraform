@@ -14,6 +14,7 @@ resource "vsphere_virtual_machine" "TPM03-K8-NODE" {
   resource_pool_id = "${data.vsphere_resource_pool.resource_pool.id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
   folder           = "${var.vsphere_vm_folder}"
+  tags             = ["${data.vsphere_tag.tag.id}"]
 
   #depends_on = ["vsphere_virtual_machine.TPM03-K8-MASTER"]
 

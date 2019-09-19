@@ -35,3 +35,10 @@ data "vsphere_resource_pool" "resource_pool" {
   name          = "TPM03-AS"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
+data "vsphere_tag_category" "category" {
+  name = "${var.vsphere_tag_catagory}"
+}
+data "vsphere_tag" "tag" {
+  name        = "${var.vsphere_tag_name}"
+  category_id = "${data.vsphere_tag_category.category.id}"
+}
