@@ -109,7 +109,7 @@ variable "vsphere_ipv4_address_k8n1_network" {
 variable "vsphere_ipv4_address_k8n1_host" {
   description = "K8 Node 1 IP"
 }
-variable "vsphere_tag_catagory" {
+variable "vsphere_tag_category" {
   description = "vSphere Tag Catagory Details"
 }
 variable "vsphere_tag_name" {

@@ -23,7 +23,7 @@ vsphere_dns_servers = "10.0.0.2"
 vsphere_domain = "aperaturelabs.biz"
 vsphere_time_zone = "UTC"
 vsphere_vm_password ="Veeam1!"
-vsphere_tag_catagory ="TPM03"
+vsphere_tag_category ="TPM03"
 vsphere_tag_name ="TPM03-NO-BACKUP"
 
 # K8 NODES 
