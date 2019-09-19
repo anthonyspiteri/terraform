@@ -2,7 +2,7 @@
 
 ## Description
 Automated deployment of Kubernetes consisting of a Master and configurable Node Servers on CentOS based Virtual Machines 
-(Related Blog Post - https://anthonyspiteri.net/?p=8928&preview=true)
+(Related Blog Post - https://anthonyspiteri.net/deploying-a-kubernetes-sandbox-on-vmware-with-terraform/)
 
 ## Requirements
  - CentOS Template prepared and ready for deployment form vCenter - see example configuration http://everything-virtual.com/2016/05/06/creating-a-centos-7-2-vmware-gold-template/
