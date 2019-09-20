@@ -21,16 +21,3 @@ repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 exclude=kube*
 EOF
-
-yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
-
-systemctl enable --now kubelet
-
-yum install -y docker
-
-systemctl enable docker && systemctl start docker
- 
-sysctl --system
-
-echo '1' > /proc/sys/net/ipv4/ip_forward
-echo "1" > /proc/sys/net/bridge/bridge-nf-call-iptables

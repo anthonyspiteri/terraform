@@ -65,7 +65,6 @@ resource "vsphere_virtual_machine" "TPM03-K8-MASTER" {
             password = "${var.vsphere_vm_password}"
         }
     }
-
     provisioner "remote-exec" {
         inline = [
             "chmod +x /tmp/configure_phase1.sh",
@@ -77,10 +76,9 @@ resource "vsphere_virtual_machine" "TPM03-K8-MASTER" {
             password = "${var.vsphere_vm_password}"
         }
     }
-
     provisioner "remote-exec" {
         inline = [
-            "kubeadm init --pod-network-cidr=${var.vsphere_k8pod_network}"
+            "yum install -y docker kubelet-${var.vsphere_k8_version} kubeadm-${var.vsphere_k8_version} kubectl-${var.vsphere_k8_version} --disableexcludes=kubernetes"
         ]
       
         connection {
@@ -105,6 +103,38 @@ resource "vsphere_virtual_machine" "TPM03-K8-MASTER" {
         inline = [
             "chmod +x /tmp/configure_phase2.sh",
             "/tmp/configure_phase2.sh",
+        ]
+        connection {
+            type     = "ssh"
+            user     = "root"
+            password = "${var.vsphere_vm_password}"
+        }
+    }
+    provisioner "remote-exec" {
+        inline = [
+            "kubeadm init --pod-network-cidr=${var.vsphere_k8pod_network}"
+        ]
+      
+        connection {
+            type     = "ssh"
+            user     = "root"
+            password = "${var.vsphere_vm_password}"
+        }
+    }
+    provisioner "file" {
+        source      = "configure_phase3.sh"
+        destination = "/tmp/configure_phase3.sh"
+
+        connection {
+            type     = "ssh"
+            user     = "root"
+            password = "${var.vsphere_vm_password}"
+        }
+    }
+    provisioner "remote-exec" {
+        inline = [
+            "chmod +x /tmp/configure_phase3.sh",
+            "/tmp/configure_phase3.sh",
         ]
         connection {
             type     = "ssh"

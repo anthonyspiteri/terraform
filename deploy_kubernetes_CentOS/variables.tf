@@ -115,3 +115,7 @@ variable "vsphere_tag_category" {
 variable "vsphere_tag_name" {
   description = "vSphere Tag Details"
 }
+variable "vsphere_k8_version" {
+  description ="Kubernetes Version to Install"
+  default     = "1.15.3"
+}

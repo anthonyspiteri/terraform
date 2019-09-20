@@ -62,8 +62,8 @@ resource "vsphere_virtual_machine" "TPM03-K8-NODE" {
   }
 
 provisioner "file" {
-        source      = "configurek8node.sh"
-        destination = "/tmp/configurek8node.sh"
+        source      = "configurek8node_phase1.sh"
+        destination = "/tmp/configurek8node_phase1.sh"
 
         connection {
             type     = "ssh"
@@ -74,8 +74,40 @@ provisioner "file" {
 
     provisioner "remote-exec" {
         inline = [
-            "chmod +x /tmp/configurek8node.sh",
-            "/tmp/configurek8node.sh",
+            "chmod +x /tmp/configurek8node_phase1.sh",
+            "/tmp/configurek8node_phase1.sh",
+        ]
+        connection {
+            type     = "ssh"
+            user     = "root"
+            password = "${var.vsphere_vm_password}"
+        }
+    }
+    provisioner "remote-exec" {
+        inline = [
+            "yum install -y kubelet-${var.vsphere_k8_version} kubeadm-${var.vsphere_k8_version} kubectl-${var.vsphere_k8_version} --disableexcludes=kubernetes"
+        ]
+      
+        connection {
+            type     = "ssh"
+            user     = "root"
+            password = "${var.vsphere_vm_password}"
+        }
+    }
+    provisioner "file" {
+        source      = "configurek8node_phase2.sh"
+        destination = "/tmp/configurek8node_phase2.sh"
+
+        connection {
+            type     = "ssh"
+            user     = "root"
+            password = "${var.vsphere_vm_password}"
+        }
+    }
+    provisioner "remote-exec" {
+        inline = [
+            "chmod +x /tmp/configurek8node_phase2.sh",
+            "/tmp/configurek8node_phase2.sh",
         ]
         connection {
             type     = "ssh"
