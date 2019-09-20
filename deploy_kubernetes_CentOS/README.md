@@ -22,6 +22,8 @@ The Terraform templates included in this repository requires Terraform to be ava
 
 > Added Output to display Node IPs
 
+> Added ability to set the Kubernetes version being installed. This was to workaround an issue with v1.16.0 and the POS Networking.
+
 ## Execution
 
 Ensure all configuration variables are set as per below.
