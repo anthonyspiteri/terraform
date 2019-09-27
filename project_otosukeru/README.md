@@ -33,8 +33,8 @@ There is a master PowerShell script that executes all the code as does the follo
 
 Ensure all configuration variables are set as per requirements and as per below.
 
-    PARAMETER Windows - Will not configure an AWS S3 Based Object Storage Repo when used with ConfigureSOBR
-    PARAMETER Remove - Will clear all previously configured settings and return Veeam Backup & Replication Server to default install
+    PARAMETER Windows - Will deploy Windows Template for Veeam Proxy VMs and configure Veeam Server
+    PARAMETER Remove - Will remove configuration from Veeam Server and destroy Proxy VMs
 
     EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Windows
     EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Remove
@@ -55,7 +55,7 @@ or
 
     ./post.bat
     
-## Configueration
+## Configuration
 
 ## config.json Breakdown
 All of the variables are configured in the config.json file. Nothing is required to be changed in the main depply script.
