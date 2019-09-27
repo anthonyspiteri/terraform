@@ -21,7 +21,7 @@ There is a master PowerShell script that executes all the code as does the follo
 
 1. Download [Terraform](https://releases.hashicorp.com/terraform/0.11.7/) (tested version 0.11.7 - 0.12.x will not work) binary to your workstation.
 2. Terraform vSphere Provider
-3. Pre configured Windows (Server 2019 Core Preferred) or Linux Template (not functional yet) accessible from vCenter
+3. Pre configured Windows or Linux Template accessible from vCenter
 4. Gather the VMware credentials required to communicate to vCenter
 5. Update the variable values in the 'terraform.tfvars' file.
 6. Update path in 'pre.bat' and 'post.bat'
@@ -29,9 +29,15 @@ There is a master PowerShell script that executes all the code as does the follo
 #### Version 0.3
 > First pre release for testing 
 
-## Execution
+## Getting Started
 
 Ensure all configuration variables are set as per requirements and as per below.
+
+    PARAMETER Windows - Will not configure an AWS S3 Based Object Storage Repo when used with ConfigureSOBR
+    PARAMETER Remove - Will clear all previously configured settings and return Veeam Backup & Replication Server to default install
+
+    EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Windows
+    EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Remove
 
 To Create and Configure Proxies:
 
@@ -49,7 +55,31 @@ or
 
     ./post.bat
     
-## Configuration
+## Configueration
+
+## config.json Breakdown
+All of the variables are configured in the config.json file. Nothing is required to be changed in the main depply script.
+
+    {
+	    "Default": {
+		    "Path":"c:\\Users\\anthonyspiteri\\Downloads\\Project_Otosukeru",
+		    "TFOutputProxy":"c:\\Users\\anthonyspiteri\\Downloads\\PProject_Otosukeru\\proxy_ip.json"
+	    },
+    
+    "LinuxProxy": {
+		    "Username": "centos",
+		    "LocalUsername":"root",
+		    "LocalPassword":"Veeam1!"
+		},
+    
+    "VBRDetails": {
+		    "Server":"TPM03-VBR01.AperatureLabs.biz",
+		    "Username":"APLABS\\service.veeam",
+		    "Password":"password$12"
+	    }
+    }
+
+## terraform.tfvars Breakdown
 All variables are configured in the terraform.tfvars file and passed through to the TF configuration files.
 
 ### vCenter connection
