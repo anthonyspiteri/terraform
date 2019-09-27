@@ -1,9 +1,9 @@
-# Project Ōtosukēru 
+﻿# Project Ōtosukēru 
 
 ![enter image description here](https://sociorocketnewsen.files.wordpress.com/2017/12/gp-41.png)
 
 ## Description
-Deploys Veeam Backup Proxy VMs to vSphere and configures them in Veeam Backup & Replication. 
+The aim of this project, is to have Veeam Proxies automtically deployed and configured for ephemeral use by Veeam Backup & Replication jobs. It has the ability to deploy Veeam Backup Proxy VMs to vSphere and configures them in Veeam Backup & Replication and also the ability to remove the configuration and destory the VMs. A pre and post script can be configured within the Veeam Job and run everytime the job is executed.
 
 There is a master PowerShell script that executes all the code as does the following:
 
@@ -12,15 +12,19 @@ There is a master PowerShell script that executes all the code as does the follo
 - Works out how many Veeam Proxies to deploy and sets that as a proxy count value
 - Executes Terraform apply using the proxy count value
 - Terraform deploys Proxies VM to vCenter, configures VM with name and static IP, and adds GustOS to domain
-- PowerShell adds Proxies to Backup & Replication Server
+- PowerShell adds Proxies to Backup & Replication
+
+- PowerShell then removed Proxies from Backup & Replication
+- Destroys the Proxy VMs with Terraform
 
 ## Requirements
 
 1. Download [Terraform](https://releases.hashicorp.com/terraform/0.11.7/) (tested version 0.11.7 - 0.12.x will not work) binary to your workstation.
-2. Terraform vSphere Provider 1.5.0 
-3. Gather the VMware credentials required to communicate to vCenter
-4. Update the variable values in the 'terraform.tfvars' file.
-5. Update path in 'pre.bat' and 'post.bat'
+2. Terraform vSphere Provider
+3. Pre configured Windows or Linux Template accessible from vCenter
+4. Gather the VMware credentials required to communicate to vCenter
+5. Update the variable values in the 'terraform.tfvars' file.
+6. Update path in 'pre.bat' and 'post.bat'
 
 #### Version 0.3
 > First pre release for testing 
@@ -93,7 +97,8 @@ The varibales below dictate the number of nodes (if run outside of PowerShell Pr
 
  - [ ] Complete option for Linux Proxy deployment and configuration (waiting for PowerShell commands in v10)
  - [ ] Add option to choose DCHP or Static IP Allocation
- - [ ] Add Ability to scale Proxies outside of pre and post job scripts
+ - [ ] Add ability to scale Proxies outside of pre and post job scripts
  - [ ] Add error checking to ensure correct exit conditions
+ - [ ] Add option to not join GuestOS to domain
  - [ ] Fox compatability issues with Terraform 0.12.x - main issue is JSON output not being correct format for PowerShell import
  - [ ] Improve basic Proxy sizing logic
