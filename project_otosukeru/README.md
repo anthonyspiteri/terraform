@@ -21,7 +21,7 @@ There is a master PowerShell script that executes all the code as does the follo
 
 1. Download [Terraform](https://releases.hashicorp.com/terraform/0.11.7/) (tested version 0.11.7 - 0.12.x will not work) binary to your workstation.
 2. Terraform vSphere Provider
-3. Pre configured Windows or Linux Template accessible from vCenter
+3. Pre configured Windows (Server 2019 Core Preferred) or Linux Template (not functional yet) accessible from vCenter
 4. Gather the VMware credentials required to communicate to vCenter
 5. Update the variable values in the 'terraform.tfvars' file.
 6. Update path in 'pre.bat' and 'post.bat'
