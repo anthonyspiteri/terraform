@@ -100,5 +100,5 @@ The varibales below dictate the number of nodes (if run outside of PowerShell Pr
  - [ ] Add ability to scale Proxies outside of pre and post job scripts
  - [ ] Add error checking to ensure correct exit conditions
  - [ ] Add option to not join GuestOS to domain
- - [ ] Fox compatability issues with Terraform 0.12.x - main issue is JSON output not being correct format for PowerShell import
+ - [ ] Fix compatability issues with Terraform 0.12.x - main issue is JSON output not being correct format for PowerShell import
  - [ ] Improve basic Proxy sizing logic
