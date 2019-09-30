@@ -3,7 +3,7 @@
 ----------------------------------------------------------------------
 Project Otosukeru - Dynamic Proxy Deployment with Terraform
 ----------------------------------------------------------------------
-Version : 0.3
+Version : 0.4
 Requires: Veeam Backup & Replication v9.5 Update 4 or later
 Author  : Anthony Spiteri
 Blog    : https://anthonyspiteri.net
@@ -54,7 +54,11 @@ if (!$Windows -and !$Linux -and !$Remove)
     }
 
 $StartTime = Get-Date
-Start-Transcript \logs\ProjectOtosukeru-Log.txt -Append
+<<<<<<< HEAD
+Start-Transcript logs\ProjectOtosukeru-Log.txt -Force
+=======
+Start-Transcript logs\ProjectOtosukeru-Log.txt -Append
+>>>>>>> 95b09370f14a421530452f41b013cd4b8b07b436
 
 #To be run on Server Isntalled with Veeam Backup & Replicaton
 if (!(get-pssnapin -name VeeamPSSnapIn -erroraction silentlycontinue)) 
@@ -74,9 +78,20 @@ function Pause
 
 function ConnectVBRServer
     {
-        #Connect to the Backup & Replication Server
+        #Connect to the Backup & Replication Server and exit on fail
         Disconnect-VBRServer
-        Connect-VBRServer -user $config.VBRDetails.Username -password $config.VBRDetails.Password
+
+        Try 
+            {
+                Connect-VBRServer -user $config.VBRDetails.Username -password $config.VBRDetails.Password
+            }
+        Catch 
+            {
+                Write-Host -ForegroundColor Red "ERROR: $_" -ErrorAction Stop
+                Disconnect-VBRServer
+                Stop-Transcript
+                Throw "Exiting as we couldn't connect to Veeam Server" 
+            }
     }
 
 function WorkOutProxyCount
@@ -87,15 +102,15 @@ function WorkOutProxyCount
         
         if ($VMcount -lt 10)
             {
-                $VBRProxyCount = 2  
+                $VBRProxyCount = 1  
             }
         elseif ($VMcount -le 20)
             {
-                $VBRProxyCount = 4
+                $VBRProxyCount = 2
             }
         else 
             {
-                $VBRProxyCount = 6
+                $VBRProxyCount = 4
             }
 
         $global:ProxyCount = $VBRProxyCount
