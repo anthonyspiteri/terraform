@@ -54,11 +54,7 @@ if (!$Windows -and !$Linux -and !$Remove)
     }
 
 $StartTime = Get-Date
-<<<<<<< HEAD
 Start-Transcript logs\ProjectOtosukeru-Log.txt -Force
-=======
-Start-Transcript logs\ProjectOtosukeru-Log.txt -Append
->>>>>>> 95b09370f14a421530452f41b013cd4b8b07b436
 
 #To be run on Server Isntalled with Veeam Backup & Replicaton
 if (!(get-pssnapin -name VeeamPSSnapIn -erroraction silentlycontinue)) 
