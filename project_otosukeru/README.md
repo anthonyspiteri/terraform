@@ -47,6 +47,7 @@ Ensure all configuration variables are set as per requirements and as per below.
 To Create and Configure Proxies:
 
     ./deploy_otosukeru.ps1 -Windows
+    ./deploy_otosukeru.ps1 -Linux
 
 or
 
@@ -55,10 +56,13 @@ or
 To Destroy and Remove Proxies:
 
     ./deploy_otosukeru.ps1 -Remove -Windows
+    ./deploy_otosukeru.ps1 -Remove -Linux
 
 or
 
     ./post.bat
+    
+Modification can be made to pre/post script. Example execution for Windows and Linux contained.
     
 ## Configuration
 
