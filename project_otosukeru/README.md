@@ -13,8 +13,7 @@ There is a master PowerShell script that executes all the code as does the follo
 - Executes Terraform apply using the proxy count value
 - Terraform deploys Proxies VM to vCenter, configures VM with name and static IP, and adds GustOS to domain
 - PowerShell adds Proxies to Backup & Replication
-
-- PowerShell then removed Proxies from Backup & Replication
+- PowerShell then removes Proxies from Backup & Replication
 - Destroys the Proxy VMs with Terraform
 
 ## Requirements
@@ -86,7 +85,7 @@ All of the variables are configured in the config.json file. Nothing is required
     }
 
 ## terraform.tfvars Breakdown
-All variables are configured in the terraform.tfvars file and passed through to the TF configuration files. There is one config file for Windows and ro Linux Proxy deployment. Each contained in the repective folders. 
+All variables are configured in the terraform.tfvars file and passed through to the TF configuration files. There is one config file for Windows and Linux Proxy deployment. Each contained in the repective folders. 
 
 ### vCenter connection
 
