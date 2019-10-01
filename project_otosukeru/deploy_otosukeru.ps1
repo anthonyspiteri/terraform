@@ -54,7 +54,6 @@ if (!$Windows -and !$Linux -and !$Remove)
     }
 
 $StartTime = Get-Date
-Start-Transcript logs\ProjectOtosukeru-Log.txt -Force
 
 #To be run on Server Isntalled with Veeam Backup & Replicaton
 if (!(get-pssnapin -name VeeamPSSnapIn -erroraction silentlycontinue)) 
@@ -136,14 +135,27 @@ function LinuxProxyBuild
         Set-Location $wkdir
     }
 
-function WindowsProxyRemove 
+function ProxyDestroy 
     {
-        $host.ui.RawUI.WindowTitle = "Removing Windows Proxies with Terraform"
-        
-        $wkdir = Get-Location
-        Set-Location -Path .\proxy_windows
-        & .\terraform.exe destroy --force
-        Set-Location $wkdir
+        if($Remove -and $Windows)
+            {
+                $host.ui.RawUI.WindowTitle = "Destroying Windows Proxies with Terraform"
+            
+                $wkdir = Get-Location
+                Set-Location -Path .\proxy_windows
+                & .\terraform.exe destroy --force
+                Set-Location $wkdir
+            }
+
+        if($Remove -and $Linux)
+            {
+                $host.ui.RawUI.WindowTitle = "Destroying Linux Proxies with Terraform"
+
+                $wkdir = Get-Location
+                Set-Location -Path .\proxy_linux
+                & .\terraform.exe destroy --force
+                Set-Location $wkdir
+            }
     }
 
 function AddVeeamProxy
@@ -160,7 +172,7 @@ function AddVeeamProxy
 
         if ($Linux)
             {
-                Add-VBRCredentials -Type Linux -User $config.LinuxRepo.LocalUsername -Password $config.LinuxRepo.LocalPassword -ElevateToRoot -Description $config.LinuxRepo.LocalRepoName  | Out-Null
+                Add-VBRCredentials -Type Linux -User $config.LinuxProxy.LocalUsername -Password $config.LinuxProxy.LocalPassword -ElevateToRoot -Description "Proxy Linux Admin"  | Out-Null
             }
 
         for ($i=0; $i -lt $ProxyCount; $i++)
@@ -183,9 +195,12 @@ function AddVeeamProxy
 
                 if ($Linux)
                     {
+                        #Get and Set Linux Credentials
+                        $LinuxCredential = Get-VBRCredentials | where {$_.Description -eq "Proxy Linux Admin"}
+                        
                         Add-VBRLinux -Name $ProxyEntity -Description "Dynamic Veeam Proxy" -Credentials $LinuxCredential -WarningAction SilentlyContinue | Out-Null
                         Write-Host ":: Creating New Veeam Linux Proxy" -ForegroundColor Green
-                        Add-VBRViProxy -Server $ProxyEntity -MaxTasks 2 -TransportMode HotAdd -ConnectedDatastoreMode Auto -EnableFailoverToNBD
+                        #Add-VBRViProxy -Server $ProxyEntity -MaxTasks 2 -TransportMode HotAdd -ConnectedDatastoreMode Auto -EnableFailoverToNBD
                     }
 
                 Write-Host "--" $ProxyEntity "Configured" -ForegroundColor Yellow -BackgroundColor Black
@@ -208,19 +223,23 @@ function RemoveVeeamProxy
                 Write-Host ":: Removing Proxy Server from Backup & Replication" -ForegroundColor Green
 
                 Get-VBRViProxy -Name $ProxyEntity | Remove-VBRViProxy -Confirm:$false -WarningAction SilentlyContinue | Out-Null
+
                 Get-VBRServer -Type Windows -Name $ProxyEntity | Remove-VBRServer -Confirm:$false -WarningAction SilentlyContinue | Out-Null
+                Get-VBRServer -Type Linux -Name $ProxyEntity | Remove-VBRServer -Confirm:$false -WarningAction SilentlyContinue | Out-Null
 
                 Write-Host "--" $ProxyEntity "Removed" -ForegroundColor Red -BackgroundColor Black
                 Write-Host
             }
 
             Get-VBRCredentials | where {$_.Name -eq $config.VBRDetails.Username} | Remove-VBRCredentials -Confirm:$false -WarningAction SilentlyContinue | Out-Null
+            Get-VBRCredentials | where {$_.Description -eq "Proxy Linux Admin"} | Remove-VBRCredentials -Confirm:$false -WarningAction SilentlyContinue | Out-Null
     }
 
 #Execute Functions
 
-if ($Windows){
+if ($Windows -and !$Remove){
     #Run the code for Windows Proxies
+    Start-Transcript logs\ProjectOtosukeru-Log.txt -Force
 
     $StartTimeVB = Get-Date
     ConnectVBRServer
@@ -259,8 +278,50 @@ if ($Windows){
     Write-Host ""
 }
 
+if ($Linux -and !$Remove){
+    #Run the code for Linux Proxies
+    Start-Transcript logs\ProjectOtosukeru-Log.txt -Force
+
+    $StartTimeVB = Get-Date
+    ConnectVBRServer
+    Write-Host ""
+    Write-Host ":: - Connected to Backup & Replication Server - ::" -ForegroundColor Green -BackgroundColor Black
+    $EndTimeVB = Get-Date
+    $durationVB = [math]::Round((New-TimeSpan -Start $StartTimeVB -End $EndTimeVB).TotalMinutes,2)
+    Write-Host "Execution Time" $durationVB -ForegroundColor Green -BackgroundColor Black
+    Write-Host ""
+    
+    $StartTimeLR = Get-Date
+    WorkOutProxyCount
+    Write-Host ""
+    Write-Host ":: - Getting Job Details and Working out Dynamix Proxy Count - ::" -ForegroundColor Green -BackgroundColor Black
+    $EndTimeLR = Get-Date
+    $durationLR = [math]::Round((New-TimeSpan -Start $StartTimeLR -End $EndTimeLR).TotalMinutes,2)
+    Write-Host "Execution Time" $durationLR -ForegroundColor Green -BackgroundColor Black
+    Write-Host ""
+
+    $StartTimeTF = Get-Date
+    LinuxProxyBuild
+    Write-Host ""
+    Write-Host ":: - Windows Proxies Deployed via Terraform - ::" -ForegroundColor Green -BackgroundColor Black
+    $EndTimeTF = Get-Date
+    $durationTF = [math]::Round((New-TimeSpan -Start $StartTimeTF -End $EndTimeTF).TotalMinutes,2)
+    Write-Host "Execution Time" $durationTF -ForegroundColor Green -BackgroundColor Black
+    Write-Host ""
+
+    $StartTimeTF = Get-Date
+    AddVeeamProxy
+    Write-Host ""
+    Write-Host ":: - Windows Proxies Configured - ::" -ForegroundColor Green -BackgroundColor Black
+    $EndTimeTF = Get-Date
+    $durationTF = [math]::Round((New-TimeSpan -Start $StartTimeTF -End $EndTimeTF).TotalMinutes,2)
+    Write-Host "Execution Time" $durationTF -ForegroundColor Green -BackgroundColor Black
+    Write-Host ""
+}
+
 if ($Remove){
     #Run the code to Remove Proxies
+    Start-Transcript logs\ProjectOtosukeru-Log.txt -Append
     
     $StartTimeVB = Get-Date
     ConnectVBRServer
@@ -282,7 +343,7 @@ if ($Remove){
     Write-Host ""
 
     $StartTimeCL = Get-Date
-    WindowsProxyRemove
+    ProxyDestroy
     Write-Host ""
     Write-Host ":: - Destroying Proxies with Terraform - ::" -ForegroundColor Green -BackgroundColor Black
     $EndTimeCL = Get-Date

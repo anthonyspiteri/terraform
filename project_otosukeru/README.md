@@ -26,18 +26,24 @@ There is a master PowerShell script that executes all the code as does the follo
 5. Update the variable values in the 'terraform.tfvars' file.
 6. Update path in 'pre.bat' and 'post.bat'
 
-#### Version 0.3
-> First pre release for testing 
+#### Version 0.4
+> 0.2 - First pre release for testing 
+
+> 0.4 - Added support for Linux Server to be added and removed to VBR Inventory in preperation for v10 Proxy PowerShell
+  Added Error Checking on VBR Connection that will exist if not sucessfull on conneciton
 
 ## Getting Started
 
 Ensure all configuration variables are set as per requirements and as per below.
 
     PARAMETER Windows - Will deploy Windows Template for Veeam Proxy VMs and configure Veeam Server
-    PARAMETER Remove - Will remove configuration from Veeam Server and destroy Proxy VMs
+    PARAMETER Linux - Will deploy Windows Template for Veeam Proxy VMs and configure Veeam Server
+    PARAMETER Remove - Will remove configuration from Veeam Server and destroy Proxy VMs in combination with -Windows or -Linux
 
     EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Windows
-    EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Remove
+    EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Linux
+    EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Remove -Windows
+    EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Remove -Linux
 
 To Create and Configure Proxies:
 
@@ -49,7 +55,7 @@ or
 
 To Destroy and Remove Proxies:
 
-    ./deploy_otosukeru.ps1 -Remove
+    ./deploy_otosukeru.ps1 -Remove -Windows
 
 or
 
@@ -80,7 +86,7 @@ All of the variables are configured in the config.json file. Nothing is required
     }
 
 ## terraform.tfvars Breakdown
-All variables are configured in the terraform.tfvars file and passed through to the TF configuration files.
+All variables are configured in the terraform.tfvars file and passed through to the TF configuration files. There is one config file for Windows and ro Linux Proxy deployment. Each contained in the repective folders. 
 
 ### vCenter connection
 
@@ -91,7 +97,7 @@ All variables are configured in the terraform.tfvars file and passed through to 
 
 ### VM specifications
 
-The following variables can be adjusted dependant on installation vSphere platform. The ones to look out for that could cause issues is the vm_firmware and vm_tags variables.
+The following variables can be adjusted dependant on installation vSphere platform. The ones to look out for that could cause issues is the vm_firmware and vm_tags variables. The vm_template and vm_firmware need to be noted depending on Windows or Linux configuration.
 
     vsphere_datacenter = "VC03"
     vsphere_vm_folder = "TPM03-AS"
@@ -128,7 +134,7 @@ The varibales below dictate the number of nodes (if run outside of PowerShell Pr
  - [ ] Complete option for Linux Proxy deployment and configuration (waiting for PowerShell commands in v10)
  - [ ] Add option to choose DCHP or Static IP Allocation
  - [ ] Add ability to scale Proxies outside of pre and post job scripts
- - [ ] Add error checking to ensure correct exit conditions
+ - [X] Add error checking to ensure correct exit conditions
  - [ ] Add option to not join GuestOS to domain
  - [ ] Fix compatability issues with Terraform 0.12.x - main issue is JSON output not being correct format for PowerShell import
  - [ ] Improve basic Proxy sizing logic

@@ -7,7 +7,7 @@
 resource "vsphere_virtual_machine" "VBR-PROXY" {
   # VM placement #
   count            = "${var.vsphere_proxy_number}"
-  name             = "${var.vsphere_vm_name}W${count.index + 1}"
+  name             = "${var.vsphere_vm_name}L${count.index + 1}"
   resource_pool_id = "${data.vsphere_resource_pool.resource_pool.id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
   folder           = "${var.vsphere_vm_folder}"
@@ -19,9 +19,6 @@ resource "vsphere_virtual_machine" "VBR-PROXY" {
 
   # Guest OS #
   guest_id              = "${data.vsphere_virtual_machine.template.guest_id}"
-  scsi_type             = "${data.vsphere_virtual_machine.template.scsi_type}"
-  firmware              = "${var.vsphere_vm_firmware}"
-  scsi_controller_count = "4"
 
   # VM storage #
   disk {
@@ -40,19 +37,20 @@ resource "vsphere_virtual_machine" "VBR-PROXY" {
     template_uuid = "${data.vsphere_virtual_machine.template.id}"
  
     customize {
-      windows_options {
-        computer_name           = "${var.vsphere_vm_name}W${count.index + 1}"
-        join_domain             = "${var.vsphere_ad_domain}"
-        domain_admin_user       = "${var.vsphere_ad_username}"
-        domain_admin_password   = "${var.vsphere_ad_password}"
+      linux_options {
+        host_name = "${var.vsphere_vm_name}L${count.index + 1}"
+        domain    = "${var.vsphere_domain}"
+        #time_zone = "${var.vsphere_time_zone}"
       }
- 
+
       network_interface {
         ipv4_address = "${var.vsphere_ipv4_address_proxy_network}${"${var.vsphere_ipv4_address_proxy_host}" + count.index}"
         ipv4_netmask = "${var.vsphere_ipv4_netmask}"
       }
-      ipv4_gateway      = "${var.vsphere_ipv4_gateway}"
-      dns_server_list   = ["${var.vsphere_dns_server1}", "${var.vsphere_dns_server2}"]
+
+      ipv4_gateway    = "${var.vsphere_ipv4_gateway}"
+      dns_server_list = ["${var.vsphere_dns_server1}", "${var.vsphere_dns_server2}"]
+      dns_suffix_list = ["${var.vsphere_domain}"]
     }
-  } 
+  }
 }
