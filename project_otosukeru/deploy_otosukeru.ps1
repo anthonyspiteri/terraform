@@ -97,15 +97,15 @@ function WorkOutProxyCount
         
         if ($VMcount -lt 10)
             {
-                $VBRProxyCount = 1  
+                $VBRProxyCount = 2  
             }
         elseif ($VMcount -le 20)
             {
-                $VBRProxyCount = 2
+                $VBRProxyCount = 4
             }
         else 
             {
-                $VBRProxyCount = 4
+                $VBRProxyCount = 6
             }
 
         $global:ProxyCount = $VBRProxyCount
