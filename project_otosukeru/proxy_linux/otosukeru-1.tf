@@ -56,18 +56,13 @@ resource "vsphere_virtual_machine" "VBR-PROXY" {
 
     provisioner "remote-exec" {
         inline = [
-	    #CENTOS,            
-            #"firewall-cmd --zone=public --add-port=2500/tcp --permanent",
-            #"firewall-cmd --reload",
-	    #UBUNTU,
-	          "sudo ufw allow from any to any port 2500 proto tcp",
+          "${lookup(var.remote_exec, var.vpshere_linux_distro)}",
         ]
       
         connection {
             type     = "ssh"
             user     = "root"
-            password = "${var.vsphere_vm_password}"
+            password = "${lookup(var.linux_password, var.vpshere_linux_distro)}"
         }
     }
-
 }

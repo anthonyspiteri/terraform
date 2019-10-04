@@ -3,7 +3,7 @@
 ----------------------------------------------------------------------
 Project Otosukeru - Dynamic Proxy Deployment with Terraform
 ----------------------------------------------------------------------
-Version : 0.9
+Version : 0.9.5
 Requires: Veeam Backup & Replication v9.5 Update 4 or later
 Author  : Anthony Spiteri
 Blog    : https://anthonyspiteri.net
@@ -25,7 +25,11 @@ Known Issues and Limitations:
 
         [Parameter(Mandatory=$false,
         ValueFromPipelineByPropertyName=$true)]
-        [Switch]$Linux,
+        [Switch]$Ubuntu,
+
+        [Parameter(Mandatory=$false,
+        ValueFromPipelineByPropertyName=$true)]
+        [Switch]$CentOS,
 
         [Parameter(Mandatory=$false,
         ValueFromPipelineByPropertyName=$true)]
@@ -44,11 +48,11 @@ Known Issues and Limitations:
         [Switch]$SetProxies
     )
 
-if (!$Windows -and !$Linux -and !$Destroy)
+if (!$Windows -and !$Ubuntu -and !$CentOS -and !$Destroy)
     {
         Write-Host ""
         Write-Host ":: - ERROR! Script was run without using a parameter..." -ForegroundColor Red -BackgroundColor Black
-        Write-Host ":: - Please use: -Windows, -Linux or -Destroy" -ForegroundColor Yellow -BackgroundColor Black 
+        Write-Host ":: - Please use: -Windows, -Ubunut, -Centos or -Destroy" -ForegroundColor Yellow -BackgroundColor Black 
         Write-Host ""
         break
     }
@@ -143,11 +147,21 @@ function WindowsProxyBuild
 function LinuxProxyBuild
     {
         $host.ui.RawUI.WindowTitle = "Deploying Linux Proxies with Terraform"
-        
+
+        if($Ubuntu)
+            {
+                $distro = "ubuntu"
+            }
+
+        if($CentOS)
+            {
+                $distro = "centos"
+            }
+
         $wkdir = Get-Location
         Set-Location -Path .\proxy_linux
         & .\terraform.exe init
-        & .\terraform.exe apply --var "vsphere_proxy_number=$ProxyCount" -auto-approve
+        & .\terraform.exe apply --var "vpshere_linux_distro=$distro" --var "vsphere_proxy_number=$ProxyCount" -auto-approve
         & .\terraform.exe output -json proxy_ip_addresses > ..\proxy_ips.json
         Set-Location $wkdir
     }
@@ -164,7 +178,7 @@ function ProxyDestroy
                 Set-Location $wkdir
             }
 
-        if($Destroy -and $Linux)
+        if($Destroy -and ($Ubuntu -or $CentOS))
             {
                 $host.ui.RawUI.WindowTitle = "Destroying Linux Proxies with Terraform"
 
@@ -192,9 +206,14 @@ function AddVeeamProxy
                 Add-VBRCredentials -Type Windows -User $config.VBRDetails.Username -Password $config.VBRDetails.Password -Description "Windows Domain Admin" | Out-Null
             }
 
-        if ($Linux)
+        if ($Ubuntu)
             {
-                Add-VBRCredentials -Type Linux -User $config.LinuxProxy.LocalUsername -Password $config.LinuxProxy.LocalPassword -ElevateToRoot -Description "Proxy Linux Admin"  | Out-Null
+                Add-VBRCredentials -Type Linux -User $config.LinuxProxy.LocalUsername -Password $config.LinuxProxy.LocalPasswordUbuntu -ElevateToRoot -Description "Proxy Linux Admin"  | Out-Null
+            }
+
+        if ($CentOS)
+            {
+                Add-VBRCredentials -Type Linux -User $config.LinuxProxy.LocalUsername -Password $config.LinuxProxy.LocalPasswordCentOS -ElevateToRoot -Description "Proxy Linux Admin"  | Out-Null
             }
 
         for ($i=0; $i -lt $ProxyCount; $i++)
@@ -215,7 +234,7 @@ function AddVeeamProxy
                         Add-VBRViProxy -Server $ProxyEntity -MaxTasks 2 -TransportMode HotAdd -ConnectedDatastoreMode Auto -EnableFailoverToNBD | Out-Null
                     }
 
-                if ($Linux)
+                if ($Ubuntu -or $CentOS)
                     {
                         #Get and Set Linux Credentials
                         $LinuxCredential = Get-VBRCredentials | where {$_.Description -eq "Proxy Linux Admin"}
@@ -300,7 +319,7 @@ if ($Windows -and !$Destroy){
     Write-Host ""
 }
 
-if ($Linux -and !$Destroy){
+if (($Ubuntu -or $CentOS) -and !$Destroy){
     #Run the code for Linux Proxies
     Start-Transcript logs\ProjectOtosukeru-Log.txt -Force
 

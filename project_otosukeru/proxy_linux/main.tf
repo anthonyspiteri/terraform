@@ -26,7 +26,7 @@ data "vsphere_network" "network" {
 }
 
 data "vsphere_virtual_machine" "template" {
-  name          = "${var.vsphere_vm_template}"
+  name          = "${lookup(var.linux_template, var.vpshere_linux_distro)}"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 

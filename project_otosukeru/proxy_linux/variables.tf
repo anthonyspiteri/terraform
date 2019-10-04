@@ -36,10 +36,6 @@ variable "vsphere_vm_name" {
   description = "What is the name of the VM"
 }
 
-variable "vsphere_vm_template" {
-  description = "Where is the VM template located"
-}
-
 variable "vsphere_vm_firmware" {
   description = "Firmware set to bios or efi depending on Template"
   default = "bios"
@@ -108,10 +104,6 @@ variable "vsphere_time_zone" {
   default     = "UTC"
 }
 
-variable "vsphere_vm_password" {
-  description ="Root password for the CentOS Teamplte"
-}
-
 variable "vsphere_proxy_number" {
   description = "Number of Proxies"
 }
@@ -128,4 +120,27 @@ variable "vsphere_tag_category" {
 }
 variable "vsphere_tag_name" {
   description = "vSphere Tag Details"
+}
+
+variable "vpshere_linux_distro" {
+  description = "Select the Linux Distro"
+}
+
+variable "remote_exec" {
+  default = {
+    ubuntu = "sudo ufw allow from any to any port 2500 proto tcp"
+    centos = "firewall-cmd --zone=public --add-port=2500/tcp --permanent; firewall-cmd --reload"
+  }
+}
+variable "linux_template" {
+  default = {
+    ubuntu = "TPM03-AS/TPM03-UBUNTU-ROOT"
+    centos = "TPM03-AS/TPM03-CENTOS7-TEMPLATE"
+  }
+}
+variable "linux_password" {
+  default = {
+    ubuntu = "password$12"
+    centos = "Veeam1!"
+  }
 }
