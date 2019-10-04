@@ -18,18 +18,29 @@ There is a master PowerShell script that executes all the code as does the follo
 
 ## Requirements
 
-1. Download [Terraform](https://releases.hashicorp.com/terraform/0.11.7/) (tested version 0.11.7 - 0.12.x will not work) binary to your workstation.
+1. Download [Terraform](https://releases.hashicorp.com/terraform/0.11.7/) (tested version 0.11.7 - 0.12.x will not work) binary to your workstation. Ensure it's set in [system environmental variables](https://learn.hashicorp.com/terraform/getting-started/install.html)
 2. Terraform vSphere Provider
-3. Pre configured Windows or Linux Template accessible from vCenter
-4. Gather the VMware credentials required to communicate to vCenter
-5. Update the variable values in the 'terraform.tfvars' file.
-6. Update path in 'pre.bat' and 'post.bat'
+3. Pre configured Windows (2019 Server Core Preferred ) or Linux (Ubuntu 18.04 LTS Preferred) Template accessible from vCenter
+4. For Linux Template, Firewall must be enabled otherwise Terraform deployment will fail
+5. Gather the VMware credentials required to communicate to vCenter
+6. Update the variable values in the 'terraform.tfvars' file under proxy_windows and proxy_linux.
+7. Update path in 'pre.bat' and 'post.bat
 
-#### Version 0.4
+* Veeam Backup & Replication 9.5 Update 4b verified
+* Veeam Backup & Replication v10 readiness
+* Should be run from VBR Server to ensure Console Versions are compatible
+* Require Execution Policy set to Bypass - Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+#### Version 0.9
 > 0.2 - First pre release for testing 
 
 > 0.4 - Added support for Linux Server to be added and removed to VBR Inventory in preperation for v10 Proxy PowerShell
-  Added Error Checking on VBR Connection that will exist if not sucessfull on conneciton
+      - Added Error Checking on VBR Connection that will exist if not sucessfull on conneciton
+
+> 0.9 - Added support for Ubuntu or CentOS (Ubuntu default now in variable examples) 
+      - Added remote-exec Terraform entry to add port 2500 to Linux FW in readiness for v10
+      - Added error checking for VBR connectivity, Job VM Count and Terraform deployment issues
+      - Added experimental support for -SetProxyCount parameter
 
 ## Getting Started
 
@@ -37,32 +48,32 @@ Ensure all configuration variables are set as per requirements and as per below.
 
     PARAMETER Windows - Will deploy Windows Template for Veeam Proxy VMs and configure Veeam Server
     PARAMETER Linux - Will deploy Windows Template for Veeam Proxy VMs and configure Veeam Server
-    PARAMETER Remove - Will remove configuration from Veeam Server and destroy Proxy VMs in combination with -Windows or -Linux
+    PARAMETER Destroy - Will Destroy configuration from Veeam Server and destroy Proxy VMs in combination with -Windows or -Linux
 
     EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Windows
     EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Linux
-    EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Remove -Windows
-    EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Remove -Linux
+    EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Destroy -Windows
+    EXAMPLE - PS C:\>deploy_otosukeru.ps1 -Destroy -Linux
 
 To Create and Configure Proxies:
 
     ./deploy_otosukeru.ps1 -Windows
     ./deploy_otosukeru.ps1 -Linux
 
-or
+or to run from Veeam Backup Job
 
-    ./pre.bat
+    ./pre.bat 
 
-To Destroy and Remove Proxies:
+To Destroy and Destroy Proxies:
 
-    ./deploy_otosukeru.ps1 -Remove -Windows
-    ./deploy_otosukeru.ps1 -Remove -Linux
+    ./deploy_otosukeru.ps1 -Destroy -Windows
+    ./deploy_otosukeru.ps1 -Destroy -Linux
 
-or
+or to run from Veeam Backup Job
 
-    ./post.bat
+    ./post.bat 
     
-Modification can be made to pre/post script. Example execution for Windows and Linux contained.
+Modification can be made to pre/post script. Requires editing of path relative to loval environment. Example execution for Windows and Linux contained.
     
 ## Configuration
 
@@ -70,15 +81,10 @@ Modification can be made to pre/post script. Example execution for Windows and L
 All of the variables are configured in the config.json file. Nothing is required to be changed in the main depply script.
 
     {
-	    "Default": {
-		    "Path":"c:\\Users\\anthonyspiteri\\Downloads\\Project_Otosukeru",
-		    "TFOutputProxy":"c:\\Users\\anthonyspiteri\\Downloads\\PProject_Otosukeru\\proxy_ip.json"
-	    },
-    
     "LinuxProxy": {
-		    "Username": "centos",
+		    "Username": "root",
 		    "LocalUsername":"root",
-		    "LocalPassword":"Veeam1!"
+		    "LocalPassword":"password$12"
 		},
     
     "VBRDetails": {
@@ -136,7 +142,7 @@ The varibales below dictate the number of nodes (if run outside of PowerShell Pr
 
  - [ ] Complete option for Linux Proxy deployment and configuration (waiting for PowerShell commands in v10)
  - [ ] Add option to choose DCHP or Static IP Allocation
- - [ ] Add ability to scale Proxies outside of pre and post job scripts
+ - [X] Add ability to scale Proxies outside of pre and post job scripts
  - [X] Add error checking to ensure correct exit conditions
  - [ ] Add option to not join GuestOS to domain
  - [ ] Fix compatability issues with Terraform 0.12.x - main issue is JSON output not being correct format for PowerShell import

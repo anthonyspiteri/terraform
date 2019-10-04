@@ -3,7 +3,7 @@
 ----------------------------------------------------------------------
 Project Otosukeru - Dynamic Proxy Deployment with Terraform
 ----------------------------------------------------------------------
-Version : 0.4
+Version : 0.9
 Requires: Veeam Backup & Replication v9.5 Update 4 or later
 Author  : Anthony Spiteri
 Blog    : https://anthonyspiteri.net
@@ -29,7 +29,7 @@ Known Issues and Limitations:
 
         [Parameter(Mandatory=$false,
         ValueFromPipelineByPropertyName=$true)]
-        [Switch]$Remove,
+        [Switch]$Destroy,
 
         [Parameter(Mandatory=$false,
         ValueFromPipelineByPropertyName=$true)]
@@ -41,14 +41,14 @@ Known Issues and Limitations:
 
         [Parameter(Mandatory=$false,
         ValueFromPipelineByPropertyName=$true)]
-        [Switch]$Proxies
+        [Switch]$SetProxies
     )
 
-if (!$Windows -and !$Linux -and !$Remove)
+if (!$Windows -and !$Linux -and !$Destroy)
     {
         Write-Host ""
         Write-Host ":: - ERROR! Script was run without using a parameter..." -ForegroundColor Red -BackgroundColor Black
-        Write-Host ":: - Please use: -Windows, -Linux or -Remove" -ForegroundColor Yellow -BackgroundColor Black 
+        Write-Host ":: - Please use: -Windows, -Linux or -Destroy" -ForegroundColor Yellow -BackgroundColor Black 
         Write-Host ""
         break
     }
@@ -82,19 +82,31 @@ function ConnectVBRServer
             }
         Catch 
             {
-                Write-Host -ForegroundColor Red "ERROR: $_" -ErrorAction Stop
+                Write-Host -ForegroundColor Orange "ERROR: $_" -ErrorAction Stop
                 Disconnect-VBRServer
                 Stop-Transcript
-                Throw "Exiting as we couldn't connect to Veeam Server" 
+                Write-Error -Exception  "Exiting as we couldn't connect to Veeam Server" -ErrorAction Stop
             }
     }
 
 function WorkOutProxyCount
     {
         $JobObject = Get-VBRJob
-        $Objects = $JobObject.GetObjectsInJob()
+            
+        try
+            {
+                $Objects = $JobObject.GetObjectsInJob()
+            }
+        catch 
+            {
+                Write-Host -ForegroundColor Orange "ERROR: $_" -ErrorAction Stop
+                Stop-Transcript
+                Write-Error -Exception "Exiting as you don't have any Jobs on the Veeam Server" -ErrorAction Stop
+            }
+
+        $JobObject = Get-VBRJob
         $VMcount = $Objects.count
-        
+
         if ($VMcount -lt 10)
             {
                 $VBRProxyCount = 2  
@@ -107,7 +119,12 @@ function WorkOutProxyCount
             {
                 $VBRProxyCount = 6
             }
-
+    
+        if($SetProxies)
+            {
+                $VBRProxyCount = $( Read-Host "Enter Number of Proxies to Deploy")
+            }
+    
         $global:ProxyCount = $VBRProxyCount
     }
 
@@ -137,7 +154,7 @@ function LinuxProxyBuild
 
 function ProxyDestroy 
     {
-        if($Remove -and $Windows)
+        if($Destroy -and $Windows)
             {
                 $host.ui.RawUI.WindowTitle = "Destroying Windows Proxies with Terraform"
             
@@ -147,7 +164,7 @@ function ProxyDestroy
                 Set-Location $wkdir
             }
 
-        if($Remove -and $Linux)
+        if($Destroy -and $Linux)
             {
                 $host.ui.RawUI.WindowTitle = "Destroying Linux Proxies with Terraform"
 
@@ -161,9 +178,14 @@ function ProxyDestroy
 function AddVeeamProxy
     {
         $host.ui.RawUI.WindowTitle = "Adding Veeam Proxies"
-
+        
         $ProxyList = Get-Content proxy_ips.json | ConvertFrom-Json
         $ProxyArray =@($ProxyList)
+
+        if(!$ProxyArray)
+            {
+                Write-Error -Exception "Exiting due to Terraform Proxy Deployment Issue" -ErrorAction Stop
+            }
 
         if ($Windows) 
             {
@@ -237,7 +259,7 @@ function RemoveVeeamProxy
 
 #Execute Functions
 
-if ($Windows -and !$Remove){
+if ($Windows -and !$Destroy){
     #Run the code for Windows Proxies
     Start-Transcript logs\ProjectOtosukeru-Log.txt -Force
 
@@ -278,7 +300,7 @@ if ($Windows -and !$Remove){
     Write-Host ""
 }
 
-if ($Linux -and !$Remove){
+if ($Linux -and !$Destroy){
     #Run the code for Linux Proxies
     Start-Transcript logs\ProjectOtosukeru-Log.txt -Force
 
@@ -319,7 +341,7 @@ if ($Linux -and !$Remove){
     Write-Host ""
 }
 
-if ($Remove){
+if ($Destroy){
     #Run the code to Remove Proxies
     Start-Transcript logs\ProjectOtosukeru-Log.txt -Append
     

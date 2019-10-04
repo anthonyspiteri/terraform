@@ -1,12 +1,8 @@
 {
-    "Default": {
-            "Path":"c:\\Users\\anthonyspiteri\\Downloads\\Project_Otosukeru",
-            "TFOutputProxy":"c:\\Users\\anthonyspiteri\\Downloads\\PProject_Otosukeru\\proxy_ip.json"
-        },
     "LinuxProxy": {
-            "Username": "centos",
+            "Username": "root",
             "LocalUsername":"root",
-            "LocalPassword":"Veeam1!"
+            "LocalPassword":"password$12"
         },
     "VBRDetails": {
             "Server":"TPM03-VBR01.AperatureLabs.biz",
