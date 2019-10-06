@@ -24,7 +24,7 @@ There is a master PowerShell script that executes all the code as does the follo
 4. For Linux Template, Firewall must be enabled otherwise Terraform deployment will fail
 5. Update the VMware and Linux Template credentials required to communicate to vCenter and modify in config.json
 6. Update the variable values in the 'terraform.tfvars' file under proxy_windows and proxy_linux
-7. Update CentOS and Ubuntu values in the 'variables.tf' file under proxy_linux
+7. Update CentOS and Ubuntu values in the 'maps.tf' file under proxy_linux
 7. Update path in 'pre.bat' and 'post.bat
 
 * Veeam Backup & Replication 9.5 Update 4b tested and supported for Windows Proxy Only
@@ -32,7 +32,7 @@ There is a master PowerShell script that executes all the code as does the follo
 * Should be run from VBR Server to ensure Console Versions are compatible
 * Require Execution Policy set to Bypass - Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
-#### Version 0.9.5
+#### Version 0.9.5.1
 > 0.2 - First pre release for testing 
 
 > 0.4 - Added support for Linux Server to be added and removed to VBR Inventory in preperation for v10 Proxy PowerShell
@@ -43,7 +43,9 @@ There is a master PowerShell script that executes all the code as does the follo
       - Added error checking for VBR connectivity, Job VM Count and Terraform deployment issues
       - Added experimental support for -SetProxyCount parameter
 
-> 0.9.5 - Created new parameters that deploy a CentOS or Ubuntu based Proxy depending on the flag used. All configuration for either distro is contained in Terraform MAP variables declared in the variables.tf file of proxy_linux. This allows for the deployment of Windows, Ubuntu or CentOS based Proxies.
+> 0.9.5 - Created new parameters that deploy a CentOS or Ubuntu based Proxy depending on the flag used. All configuration for either distro is contained in Terraform MAP variables declared in the variables.tf file of proxy_linux. This allows for the deployment of Windows, Ubuntu or CentOS based Proxies
+
+> 0.9.5.1 - Seperated MAP veriables out to self contained declaration file for easier editing
 
 ## Getting Started
 
@@ -171,6 +173,28 @@ The varibales below dictate the number of nodes (if run outside of PowerShell Pr
     vsphere_proxy_number = "3"
     vsphere_ipv4_address_proxy_network = "10.0.30."
     vsphere_ipv4_address_proxy_host ="210"
+
+## maps.tf Breakdown (proxy_linux)
+To make Linux deployment more streamlined, there is a seperate maps.tf file from which to set specific distro variables. The MAPs are then used depending on the vsphere_linux_distro variable that is set in 'terraform.tfvars' (if run outside of PowerShell) or set at the time of Terraform apply. Example below is for Ubuntu and CentOS and sets remote_exec command for FW rules 2500, the template location and the template password.
+
+    variable "remote_exec" {
+        default = {
+        ubuntu = "sudo ufw allow from any to any port 2500 proto tcp"
+        centos = "firewall-cmd --zone=public --add-port=2500/tcp --permanent; firewall-cmd --reload"
+        }
+    }
+    variable "linux_template" {
+        default = {
+        ubuntu = "TPM03-AS/TPM03-UBUNTU-ROOT"
+        centos = "TPM03-AS/TPM03-CENTOS7-TEMPLATE"
+        }
+    }
+    variable "linux_password" {
+        default = {
+        ubuntu = "password$12"
+        centos = "Veeam1!"
+        }
+    }
 
 ## To Do
 

@@ -3,7 +3,7 @@
 ----------------------------------------------------------------------
 Project Otosukeru - Dynamic Proxy Deployment with Terraform
 ----------------------------------------------------------------------
-Version : 0.9.5
+Version : 0.9.5.1
 Requires: Veeam Backup & Replication v9.5 Update 4 or later
 Author  : Anthony Spiteri
 Blog    : https://anthonyspiteri.net
