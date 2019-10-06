@@ -31,7 +31,7 @@ data "vsphere_virtual_machine" "template" {
 }
 
 data "vsphere_resource_pool" "resource_pool" {
-  name          = "TPM03-AS"
+  name          = "${var.vsphere_vm_resource_pool}"
   datacenter_id = "${data.vsphere_datacenter.dc.id}"
 }
 data "vsphere_tag_category" "category" {
