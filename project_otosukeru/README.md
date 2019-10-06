@@ -32,7 +32,7 @@ There is a master PowerShell script that executes all the code as does the follo
 * Should be run from VBR Server to ensure Console Versions are compatible
 * Require Execution Policy set to Bypass - Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
-#### Version 0.9.5.1
+#### Version 0.9.5.2
 > 0.2 - First pre release for testing 
 
 > 0.4 - Added support for Linux Server to be added and removed to VBR Inventory in preperation for v10 Proxy PowerShell
@@ -46,6 +46,8 @@ There is a master PowerShell script that executes all the code as does the follo
 > 0.9.5 - Created new parameters that deploy a CentOS or Ubuntu based Proxy depending on the flag used. All configuration for either distro is contained in Terraform MAP variables declared in the variables.tf file of proxy_linux. This allows for the deployment of Windows, Ubuntu or CentOS based Proxies
 
 > 0.9.5.1 - Seperated MAP veriables out to self contained declaration file for easier editing
+
+> 0.9.5.2 - Added error checking for Proxy Server VBR configuration when adding managed server
 
 ## Getting Started
 

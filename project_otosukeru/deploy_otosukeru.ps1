@@ -86,7 +86,7 @@ function ConnectVBRServer
             }
         Catch 
             {
-                Write-Host -ForegroundColor Orange "ERROR: $_" -ErrorAction Stop
+                Write-Host -ForegroundColor Red "ERROR: $_" -ErrorAction Stop
                 Disconnect-VBRServer
                 Stop-Transcript
                 Write-Error -Exception  "Exiting as we couldn't connect to Veeam Server" -ErrorAction Stop
@@ -103,7 +103,7 @@ function WorkOutProxyCount
             }
         catch 
             {
-                Write-Host -ForegroundColor Orange "ERROR: $_" -ErrorAction Stop
+                Write-Host -ForegroundColor Red "ERROR: $_" -ErrorAction Stop
                 Stop-Transcript
                 Write-Error -Exception "Exiting as you don't have any Jobs on the Veeam Server" -ErrorAction Stop
             }
@@ -229,7 +229,18 @@ function AddVeeamProxy
                         $WindowsCredential = Get-VBRCredentials | where {$_.Name -eq $config.VBRDetails.Username} 
 
                         #Add Windows Server to VBR and Configure Proxy
-                        Add-VBRWinServer -Name $ProxyEntity -Description "Dynamic Veeam Proxy" -Credentials $WindowsCredential | Out-Null
+                        try 
+                            {
+                                Add-VBRWinServer -Name $ProxyEntity -Description "Dynamic Veeam Proxy" -Credentials $WindowsCredential -ErrorAction Stop | Out-Null
+                            }
+                        Catch 
+                            {
+                                Write-Host -ForegroundColor Red "ERROR: $_" -ErrorAction Stop
+		                        Get-VBRCredentials | where {$_.Name -eq $config.VBRDetails.Username} | Remove-VBRCredentials -Confirm:$false -WarningAction SilentlyContinue | Out-Null
+                                Stop-Transcript
+                                Write-Error -Exception "Exiting due to issues adding Windows Proxy to Veeam Server" -ErrorAction Stop
+                            }
+
                         Write-Host ":: Creating New Veeam Windows Proxy" -ForegroundColor Green
                         Add-VBRViProxy -Server $ProxyEntity -MaxTasks 2 -TransportMode HotAdd -ConnectedDatastoreMode Auto -EnableFailoverToNBD | Out-Null
                     }
@@ -239,7 +250,18 @@ function AddVeeamProxy
                         #Get and Set Linux Credentials
                         $LinuxCredential = Get-VBRCredentials | where {$_.Description -eq "Proxy Linux Admin"}
                         
-                        Add-VBRLinux -Name $ProxyEntity -Description "Dynamic Veeam Proxy" -Credentials $LinuxCredential -WarningAction SilentlyContinue | Out-Null
+                        try 
+                            {
+                                Add-VBRLinux -Name $ProxyEntity -Description "Dynamic Veeam Proxy" -Credentials $LinuxCredential -WarningAction SilentlyContinue -ErrorAction Stop | Out-Null
+                            }
+                        catch 
+                            {
+                                Write-Host -ForegroundColor Red "ERROR: $_" -ErrorAction Stop
+		                        Get-VBRCredentials | where {$_.Description -eq "Proxy Linux Admin"} | Remove-VBRCredentials -Confirm:$false -WarningAction SilentlyContinue | Out-Null
+                                Stop-Transcript
+                                Write-Error -Exception "Exiting due to issues adding Linux Proxy to Veeam Server" -ErrorAction Stop
+                            }
+
                         Write-Host ":: Creating New Veeam Linux Proxy" -ForegroundColor Green
                         #Add-VBRViProxy -Server $ProxyEntity -MaxTasks 2 -TransportMode HotAdd -ConnectedDatastoreMode Auto -EnableFailoverToNBD
                     }
