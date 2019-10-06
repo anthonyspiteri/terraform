@@ -32,7 +32,7 @@ There is a master PowerShell script that executes all the code as does the follo
 * Should be run from VBR Server to ensure Console Versions are compatible
 * Require Execution Policy set to Bypass - Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
-#### Version 0.9.5.2
+#### Version 0.9.5.3
 > 0.2 - First pre release for testing 
 
 > 0.4 - Added support for Linux Server to be added and removed to VBR Inventory in preperation for v10 Proxy PowerShell
@@ -48,6 +48,8 @@ There is a master PowerShell script that executes all the code as does the follo
 > 0.9.5.1 - Seperated MAP veriables out to self contained declaration file for easier editing
 
 > 0.9.5.2 - Added error checking for Proxy Server VBR configuration when adding managed server
+
+> 0.9.5.3 - Added random number element to Proxy VM and Machine Name to allow overlapping instances to be run (allowing for future DHCP support) and not have conflicts.
 
 ## Getting Started
 
@@ -123,7 +125,6 @@ The following variables can be adjusted dependant on installation vSphere platfo
 
     vsphere_datacenter = "VC03"
     vsphere_vm_folder = "TPM03-AS"
-    vsphere_vm_name = "VBR-PROXY-"
     vsphere_vm_resource_pool ="TPM03-AS"
     vsphere_vm_template = "TPM03-AS/WIN2K19-TEST"
     vsphere_vm_firmware = "efi"
@@ -145,11 +146,10 @@ The following variables can be adjusted dependant on installation vSphere platfo
 
 ### VM specifications Windows (proxy_linux)
 
-The following variables can be adjusted dependant on installation vSphere platform. The ones to look out for that could cause issues is the vm_firmware and vm_tags variables. The vm_template and vm_firmware need to be noted depending on Windows or Linux configuration.
+The following variables can be adjusted dependant on installation vSphere platform. The ones to look out for that could cause issues is the vm_firmware and vm_tags variables. The vm_firmware need to be noted depending on Windows or Linux configuration.
 
     vsphere_datacenter = "VC03"
     vsphere_vm_folder = "TPM03-AS"
-    vsphere_vm_name = "VBR-PROXY-"
     vsphere_vm_resource_pool ="TPM03-AS"
     vsphere_vm_firmware = "bios"
     vsphere_cluster = "MEGA-03"

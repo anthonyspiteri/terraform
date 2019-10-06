@@ -12,7 +12,6 @@ vsphere_ad_password = "password$12"
 # VM specifications
 vsphere_datacenter = "VC03"
 vsphere_vm_folder = "TPM03-AS"
-vsphere_vm_name = "VBR-PROXY-"
 vsphere_vm_resource_pool ="TPM03-AS"
 vsphere_vm_firmware = "bios"
 vsphere_cluster = "MEGA-03"

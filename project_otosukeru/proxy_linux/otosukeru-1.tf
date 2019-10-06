@@ -7,7 +7,7 @@
 resource "vsphere_virtual_machine" "VBR-PROXY" {
   # VM placement #
   count            = "${var.vsphere_proxy_number}"
-  name             = "${var.vsphere_vm_name}L${count.index + 1}"
+  name             = "${var.vsphere_vm_name}-L${random_integer.priority.result}-${count.index + 1}"
   resource_pool_id = "${data.vsphere_resource_pool.resource_pool.id}"
   datastore_id     = "${data.vsphere_datastore.datastore.id}"
   folder           = "${var.vsphere_vm_folder}"
@@ -38,7 +38,7 @@ resource "vsphere_virtual_machine" "VBR-PROXY" {
  
     customize {
       linux_options {
-        host_name = "${var.vsphere_vm_name}L${count.index + 1}"
+        host_name = "${var.vsphere_vm_name}-L${random_integer.priority.result}-${count.index + 1}"
         domain    = "${var.vsphere_domain}"
         #time_zone = "${var.vsphere_time_zone}"
       }

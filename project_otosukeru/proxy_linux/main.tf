@@ -41,3 +41,10 @@ data "vsphere_tag" "tag" {
   name        = "${var.vsphere_tag_name}"
   category_id = "${data.vsphere_tag_category.category.id}"
 }
+provider "random" {
+  version="2.0"
+}
+resource "random_integer" "priority" {
+  min = 10
+  max = 99
+}

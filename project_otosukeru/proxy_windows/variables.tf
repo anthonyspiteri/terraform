@@ -33,7 +33,8 @@ variable "vsphere_datacenter" {
 }
 
 variable "vsphere_vm_name" {
-  description = "What is the name of the VM"
+  description = "What is the name of the VM - Should be no more than 7 characters long"
+  default = "VBR-PRX"
 }
 
 variable "vsphere_vm_template" {
