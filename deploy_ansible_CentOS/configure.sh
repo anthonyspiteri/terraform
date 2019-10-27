@@ -4,13 +4,18 @@
 
 yum install -y epel-release
 yum update -y
-yum install -y ansible git vim
-
+yum install -y ansible git vim yum bind-utils
 #PIP and come advanced modules
 
+yum install -y python-requests-kerberos
+yum install -y python2-winrm
 yum install -y python-pip
 pip install pyvmomi
 pip install pywinrm
+
+yum autoremove -y python2-winrm.noarch
+pip install "pywinrm>=0.3.0"
+pip install --ignore-installed "pywinrm>=0.3.0"
 
 #Upgrade PIP
 
@@ -33,6 +38,8 @@ yum install -y powershell
 cat << EOF > ~/.vault_pass.txt
 password123
 EOF
+
+
 
 #Show some info about Anisble
 
