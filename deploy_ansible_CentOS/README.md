@@ -9,7 +9,7 @@ Quick and nasty automated deployment of Anisble consisting of a Contol Server on
  
 The Terraform templates included in this repository requires Terraform to be available locally on the machine running the templates.  Before you begin, please verify that you have the following information:
 
-1. Download [Terraform](https://releases.hashicorp.com/terraform/0.11.7/) (tested version 0.11.7 - 0.12 not work tested) binary to your workstation.
+1. Download [Terraform](https://releases.hashicorp.com/terraform/) (tested version 0.12.07) binary to your workstation.
 2. Terraform vSphere Provider
 3. Gather the VMware credentials required to communicate to vCenter
 4. Update the variable values in the newly created `terraform.tfvars` file.
