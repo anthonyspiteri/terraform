@@ -87,12 +87,14 @@ variable "vsphere_time_zone" {
 }
 
 variable "vsphere_vm_password" {
-  description ="Root password for the CentOS Teamplte"
+  description = "Root password for the CentOS Teamplte"
 }
 
 variable "vsphere_tag_category" {
   description = "vSphere Tag Category Details"
 }
+
 variable "vsphere_tag_name" {
   description = "vSphere Tag Details"
 }
+
