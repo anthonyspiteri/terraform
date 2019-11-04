@@ -12,7 +12,8 @@ The Terraform templates included in this repository requires Terraform to be ava
 1. Download [Terraform](https://releases.hashicorp.com/terraform/) (tested version 0.12.07) binary to your workstation.
 2. Terraform vSphere Provider
 3. Gather the VMware credentials required to communicate to vCenter
-4. Update the variable values in the newly created `terraform.tfvars` file.
+4. Update the variable values in the `terraform.tfvars`file.
+5. Update the variable values in the `main.tfvars`file.
 
 #### Version 1.0
 > Deploys VM from CentOS Template and installs Anisble along with some added packages and modules
