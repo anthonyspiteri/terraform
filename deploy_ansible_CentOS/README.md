@@ -1,4 +1,4 @@
-# Deploy Anisble Control Server with Terraform on vSphere 
+# Deploy Ansible Control Server with Terraform on vSphere 
 
 ## Description
 Quick and nasty automated deployment of Anisble consisting of a Contol Server on CentOS based Virtual Machine
