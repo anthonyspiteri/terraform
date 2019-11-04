@@ -54,8 +54,7 @@ resource "vsphere_virtual_machine" "TPM03-ANSIBLE-01" {
     }
   }
 
-  # Configure Kubernetes #
-  # Configure Kubernetes #
+  #Update CentOS and Prep Modules for Ansible #
   provisioner "file" {
     source      = "configure.sh"
     destination = "/tmp/configure.sh"
@@ -67,7 +66,6 @@ resource "vsphere_virtual_machine" "TPM03-ANSIBLE-01" {
       password = var.vsphere_vm_password
     }
   }
-
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/configure.sh",
@@ -85,6 +83,7 @@ resource "vsphere_virtual_machine" "TPM03-ANSIBLE-01" {
     }
   }
 
+  #Install Extras for Windows, PowerShell and VMware Management
   provisioner "file" {
     source      = "configure2.sh"
     destination = "/tmp/configure2.sh"
@@ -96,7 +95,6 @@ resource "vsphere_virtual_machine" "TPM03-ANSIBLE-01" {
       password = var.vsphere_vm_password
     }
   }
-
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/configure2.sh",
@@ -111,17 +109,7 @@ resource "vsphere_virtual_machine" "TPM03-ANSIBLE-01" {
     }
   }
 
-  provisioner "remote-exec" {
-    inline = [ "reboot" ]
-    on_failure = "continue"
-    connection { 
-      host     = self.default_ip_address
-      type     = "ssh"
-      user     = "root"
-      password = var.vsphere_vm_password
-    }
-  }
-
+#Install PIP, WinRM and Ansible
   provisioner "remote-exec" {
     inline = [
       "python3 -m pip install --upgrade --force-reinstall pip",
@@ -140,5 +128,4 @@ resource "vsphere_virtual_machine" "TPM03-ANSIBLE-01" {
       password = var.vsphere_vm_password
     }
   }
-
 }
