@@ -59,4 +59,4 @@ The following variables can be adjusted dependant on installation vSphere platfo
 
 ## To Do
 
- - [ ] Work out how the hell to actually use Anisible
+ - [ ] Work out how the hell to actually use Ansible
