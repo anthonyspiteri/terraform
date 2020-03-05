@@ -2,4 +2,6 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 choco feature enable -n=exitOnRebootDetected
 choco feature enable -n=useRememberedArgumentsForUpgrades
-#choco install veeam-backup-and-replication-server -y",
+
+choco install sql-server-express
+#choco install veeam-backup-and-replication-server -y"
