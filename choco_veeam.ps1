@@ -5,4 +5,4 @@ choco feature enable -n=useRememberedArgumentsForUpgrades
 
 choco install sql-server-express -y
 
-choco install veeam-backup-and-replication-server --params "/sqlServer:(local)\SQLEXPRESS /username:autodeploy /password:Veeam1!" --source='"c:\Packages;chocolatey"' -y
+choco install veeam-backup-and-replication-server --params "/sqlServer:(local)\SQLEXPRESS /username:administrator /password:Veeam1!" --source='"c:\Packages;chocolatey"' -y
