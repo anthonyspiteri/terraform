@@ -1,7 +1,7 @@
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
-Install GoogleChrome -y
-hoco install cygwin -y
+choco Install GoogleChrome -y
+choco install cygwin -y
 choco install cyg-get -y
 cyg-get ansible
 
